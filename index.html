@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정보처리기사 CBT 시험</title>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="mainTitle">📚 정보처리기사 CBT</h1>
+            <div class="exam-title-center" id="examTitleCenter" style="display: none;">
+                <span>📝 <span id="currentExam">2023년 1회</span></span>
+                <button class="change-exam-btn" id="changeExamBtn">회차 변경</button>
+            </div>
+            <div class="header-center" id="timerCenter" style="display: none;">
+                <span class="timer" id="timer">⏰ 150:00</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 시작 화면 -->
+            <div class="start-screen" id="startScreen">
+                <p>원하는 시험 유형을 선택해주세요.</p>
+
+                <div class="exam-type-selector">
+                    <div class="exam-type-card" id="writtenExamCard">
+                        <div class="exam-type-icon">📝</div>
+                        <div class="exam-type-title">필기 시험</div>
+                        <div class="exam-type-description">
+                            객관식 100문제<br>
+                            150분 제한시간<br>
+                            다양한 회차 선택 가능
+                        </div>
+                        <button class="btn btn-primary exam-type-btn" id="selectWrittenBtn">
+                            필기 시험 시작
+                        </button>
+                    </div>
+
+                    <div class="exam-type-card" id="practicalExamCard">
+                        <div class="exam-type-icon">💻</div>
+                        <div class="exam-type-title">실기 시험</div>
+                        <div class="exam-type-description">
+                            키워드 문제풀이<br>
+                            주관식 답안 입력<br>
+                            개념 정리 및 암기
+                        </div>
+                        <button class="btn btn-success exam-type-btn" id="selectPracticalBtn">
+                            실기 시험 시작
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 시험 내용 -->
+            <div class="exam-content" id="examContent">
+                <div class="question-nav">
+                    <button class="btn btn-secondary" id="prevBtn">◀ 이전</button>
+                    <div class="progress-bar">
+                        <div class="progress" id="progressBar"></div>
+                    </div>
+                    <button class="btn btn-secondary" id="nextBtn">다음 ▶</button>
+                </div>
+
+                <button class="btn toggle-grid" id="toggleGrid">문제 네비게이션 보기</button>
+                <div class="question-grid" id="questionGrid"></div>
+
+                <div id="questionContainer"></div>
+
+                <div class="controls">
+                    <div>
+                        <span id="questionCounter">문제 1 / 100</span>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" id="exitBtn">나가기</button>
+                        <button class="btn btn-success" id="submitBtn">제출하기</button>
+                        <button class="btn btn-primary" id="reviewBtn" style="display:none;">오답 확인</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 리뷰 문제풀이 화면 -->
+            <div class="review-content" id="reviewContent" style="display: none;">
+                <div id="reviewQuestionContainer"></div>
+
+                <div class="review-controls">
+                    <div class="review-status">
+                        <span id="reviewQuestionCounter">문제 1 / 30</span>
+                    </div>
+                    <div class="review-buttons">
+                        <button class="btn btn-secondary" id="exitReviewBtn">나가기</button>
+                        <button class="btn btn-warning" id="shuffleReviewBtn">문제 섞기</button>
+                        <button class="btn btn-success" id="restartReviewBtn" style="display: none;">다시 풀기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 필기 시험 회차 선택 화면 -->
+            <div class="exam-selector" id="writtenExamSelector">
+                <button class="btn back-btn" id="backToStartBtn">◀ 메인으로 돌아가기</button>
+                <h2>📋 필기 시험 회차 선택</h2>
+                <p>원하는 시험 회차를 선택해주세요.</p>
+                <div class="exam-list" id="writtenExamList">
+                    <!-- 회차 목록이 여기에 동적으로 생성됩니다 -->
+                </div>
+            </div>
+
+            <!-- 회차 선택 화면 (기존 호환성 유지) -->
+            <div class="exam-selector" id="examSelector" style="display: none;">
+                <button class="btn back-btn" id="backToStartBtnOld">◀ 메인으로 돌아가기</button>
+                <h2>📋 시험 회차 선택</h2>
+                <p>원하는 시험 회차를 선택해주세요.</p>
+                <div class="exam-list" id="examList">
+                    <!-- 회차 목록이 여기에 동적으로 생성됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <h2>🎉 시험 완료!</h2>
+            <div class="score-display" id="scoreDisplay">0/100</div>
+            <p id="scoreText">축하합니다!</p>
+            <div style="margin-top: 30px;">
+                <button class="btn btn-primary" id="reviewAnswers">오답 확인</button>
+                <button class="btn btn-warning" id="retryWrongAnswers">오답만 다시 풀기</button>
+                <button class="btn btn-secondary" id="restartExam">다시 풀기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
